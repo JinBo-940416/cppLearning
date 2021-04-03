@@ -1,6 +1,11 @@
 #include <iostream>
 
 int main(){
-    std::cout << "hello world!";
-    return 0;
+    std::cout << "hello world!\n";
+    
+    int arr[15];
+
+
+
+
 }
