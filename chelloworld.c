@@ -1,15 +1,23 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-int main() {
-    int a = 15;
-    printf("hello world %d \n", a);
+#define PI 3.14
 
-    int b = sizeof(int);
-    int c = sizeof(double);
-    int d = sizeof(float);
+struct circle{
+    float radius;
+    int x_coor;
+    int y_coor;
+};
 
-    printf("nuber of bytes for int: %d \n", b);
-    printf("nuber of bytes for double: %d \n", c);
-    printf("nuber of bytes for float: %d \n", d);
-    return 14;
+int main(){
+
+    long a = 15;
+    size_t char_size = sizeof(char);
+    size_t a_size = sizeof a; 
+
+    printf("size of a char is : %lu \n", char_size);
+    printf("size of a is : %lu \n", a_size);
+
+    return 0;
 }
