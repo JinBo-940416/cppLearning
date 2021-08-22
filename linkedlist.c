@@ -1,85 +1,108 @@
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef _linkedlist_h_file
+#define _linkedlist_h_file
+#include "linkedlist.h"
+#endif
 
-struct node {
-    int value;
-    int index;
-    struct node *next;
-};
+struct list * initialize_list(){
 
+    struct list *result_list = (struct list *)malloc(sizeof(struct list));
+    struct node *head = (struct node *)malloc(sizeof(struct node));
+    struct node *tail = (struct node *)malloc(sizeof(struct node));
 
-struct node *head = NULL;
-struct node *tail = NULL;
-
-void generateList(){
-
-    
-    head = (struct node *)malloc(sizeof(struct node));
-    head->value = 0;
-    head->index = 0;
+    head->prev = NULL;
     head->next = tail;
+    head->containing_list = result_list;
 
-
-    tail = (struct node *)malloc(sizeof(struct node));
-    tail->value = 0;
-    tail->index = -1;
     tail->next = NULL;
+    tail->prev = head;
+    tail->containing_list = result_list;
 
-    return;
+    result_list->start = head;
+    result_list->end = tail;
+    return result_list;
 }
 
-// current -> inserted -> tail
-void insertToList(int val){
-    struct node *current = head;
-
-    while (current->next-> index != -1){
-        current = current->next;
-    }
-    struct node *tail = current -> next;
-    // current -> tail
-
-    struct node *inserted;
-    inserted -> value = val;
-    inserted -> index = (current -> index)+1;
-    inserted -> next = tail;
-
-    current -> next = inserted;
-
-    return;
+void destory_list(struct list * freed_list) {
+    free(freed_list->start);
+    free(freed_list->end);
+    free(freed_list);
 }
 
-void printList(){
-    printf("\n[");
-    printf("debug 5\n");
-    struct node *current = head;
-    printf("debug 6\n");
-    int data;
-    while (current->next->index != -1){
-        data = current -> value;
-        printf("%d \n", data);
+int list_size(struct list * input_list) {
+    int i = 0;
+    struct node * current = input_list->start->next;
+
+    while(current->next != NULL) {
+        i++;
         current = current->next;
     }
-    printf("debug 7\n");
+    return i;
+}
+
+int __add_head(struct node * added_node, struct list * added_list) {
+
+    added_node->containing_list = added_list;
+
+    struct node * first_node = added_list->start;
+    struct node * second_node = first_node->next;
+
+    first_node->next = added_node;
+    added_node->next = second_node;
+
+    added_node->prev = first_node;
+    second_node->prev = added_node;
+
+    return 1;
+}
+
+int add_value_to_head(int input, struct list * added_list) {
+    struct node * added_node = (struct node *)malloc(sizeof(struct node));
+    added_node->value = input;
+    __add_head(added_node, added_list);
+    return 1;
+}
+
+int remove_head(struct list * input_list) {
+    if (list_size(input_list) == 0) {
+        printf("input list is already empty, abort remove head \n");
+        return 0;
+    }
+
+    struct node * old_head = input_list->start->next;
+    struct node * new_head = old_head->next;
+
+    input_list->start->next = new_head;
+    new_head->prev = input_list->start;
+
+    free(old_head);
+
+    return 1;
+}
+
+void print_list(struct list * input_list) {
+    printf("[");
+    struct node *current = input_list->start->next;
+    while (current->next!= NULL){
+        printf("%d ", current->value);
+        current = current->next;
+    }
     printf("]\n");
     return;
 }
 
 int main(){
-    printf("debug 1\n");
-    generateList();
-    printf("debug 2\n");
-    printList();
-    printf("debug 3\n");
-
-    insertToList(8);
-    printf("debug 4\n");
-    insertToList(7);
-    insertToList(5);
-    insertToList(2);
-    insertToList(11);
-
-    printList();
-
+    struct list * my_list = initialize_list();
+    int i = 20;
+    while (i > 0) {
+        add_value_to_head(i--, my_list);
+        printf("current length of my_list: %d \n", list_size(my_list));
+        print_list(my_list);
+    }
+    while (list_size(my_list) != 0) {
+        remove_head(my_list);
+        printf("current length of my_list: %d \n", list_size(my_list));
+        print_list(my_list);
+    }
 
     return 0;
 }
