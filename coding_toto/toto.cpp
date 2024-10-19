@@ -1,5 +1,6 @@
 #include <iostream>
 #include "toto.h"
+#include <cstring>
 
 toto_entry::toto_entry(int _number)
 {
